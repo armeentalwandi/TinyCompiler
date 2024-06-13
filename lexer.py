@@ -38,3 +38,22 @@ class Lexer:
     token = None
     if self.currChar == '+':
       token = Token(self.currChar, TokenType.PLUS)
+    elif self.currChar == '-':
+      token = Token(self.currChar, TokenType.MINUS)
+    elif self.currChar == '*':
+      token = Token(self.currChar, TokenType.ASTERISK)
+    elif self.currChar == '/':
+      token = Token(self.currChar, TokenType.SLASH)
+    elif self.currChar == '\n':
+      token = Token(self.currChar, TokenType.NEWLINE)
+    elif self.currChar == '\0':
+      token = Token('', TokenType.EOF)
+    else:
+      #unknown token ! aka not a single char operator
+      pass
+
+    self.nextChar()
+    return token
+    
+
+
