@@ -1,7 +1,7 @@
 from lexer import *
 
 def main():
-  source = "+-/ *"
+  source = "+- */ >>= = !="
   lexer = Lexer(source)
 
   token = lexer.getToken() # gets the token and moves position to the next one

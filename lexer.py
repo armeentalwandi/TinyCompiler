@@ -53,6 +53,34 @@ class Lexer:
       token = Token(self.currChar, TokenType.NEWLINE)
     elif self.currChar == '\0':
       token = Token('', TokenType.EOF)
+
+    elif self.currChar == '=':
+      if self.peek() == '=':
+        token = Token('==', TokenType.EQEQ)
+        self.nextChar()
+      else:
+        token = Token('=', TokenType.EQ)
+
+    elif self.currChar == '!':
+      if self.peek() != '=':
+        self.abort("Unidentified token: " + self.currChar + self.peek())
+      token =  Token('!=', TokenType.NOTEQ)
+      self.nextChar()
+
+    elif self.currChar == '>':
+      if self.peek() == '=':
+        token =  Token('>=', TokenType.GTEQ)
+        self.nextChar()
+      else:
+        token = Token('>', TokenType.GT)
+
+    elif self.currChar == '<':
+      if self.peek() == '=':
+        token =  Token('<=', TokenType.LTEQ)
+        self.nextChar()
+      else:
+        token = Token('<', TokenType.LT)
+
     else:
       #unknown token ! aka not a single char operator
       self.abort("not recognized: " + self.currChar)
