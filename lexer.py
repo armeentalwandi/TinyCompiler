@@ -2,6 +2,7 @@
 
 # lexer = converts a string of teeny tiny code to tokens
 from token1 import *
+import sys
 
 
 class Lexer:
@@ -25,17 +26,21 @@ class Lexer:
 
     
   def abort(self, message):
-    pass
+    sys.exit("Lexing error: " + message)
+    
 
   def skipComment(self):
     pass
 
   def skipWhitespace(self):
-    pass
+    if self.currChar == ' ' or self.currChar == '\t' or self.currChar == '\r':
+      self.nextChar()
+    
 
 # main function --> gets the next token
   def getToken(self):
     token = None
+    self.skipWhitespace() #if the curr char is a white space, it immediately skips it
     if self.currChar == '+':
       token = Token(self.currChar, TokenType.PLUS)
     elif self.currChar == '-':
@@ -50,7 +55,7 @@ class Lexer:
       token = Token('', TokenType.EOF)
     else:
       #unknown token ! aka not a single char operator
-      pass
+      self.abort("not recognized: " + self.currChar)
 
     self.nextChar()
     return token
