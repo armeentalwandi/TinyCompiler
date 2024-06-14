@@ -31,7 +31,7 @@ class Lexer:
 
   def skipComment(self):
     if self.currChar == '#': # aka start of a comment
-      while self.currChar != '/n':
+      while self.currChar != '\n':
         self.nextChar()
       
 
@@ -43,9 +43,11 @@ class Lexer:
 
 # main function --> gets the next token
   def getToken(self):
-    token = None
+    
+    
     self.skipWhitespace() #if the curr char is a white space, it immediately skips it
     self.skipComment() #if there is a comment, its skipped immediately
+    token = None
     if self.currChar == '+':
       token = Token(self.currChar, TokenType.PLUS)
     elif self.currChar == '-':
@@ -86,6 +88,16 @@ class Lexer:
       else:
         token = Token('<', TokenType.LT)
 
+    elif self.currChar == '\"':  # Get characters between quotations.
+      self.nextChar()
+      startPos = self.currPos
+      while self.currChar != '\"':
+        if self.currChar == '\r' or self.currChar == '\n' or self.currChar == '\t' or self.currChar == '\\' or self.currChar == '%':
+          self.abort("Illegal character in string.")
+        self.nextChar()
+
+      tokText = self.source[startPos : self.currPos] # Get the substring.
+      token = Token(tokText, TokenType.STRING)  
     else:
       #unknown token ! aka not a single char operator
       self.abort("not recognized: " + self.currChar)
