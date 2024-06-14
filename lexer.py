@@ -98,6 +98,22 @@ class Lexer:
 
       tokText = self.source[startPos : self.currPos] # Get the substring.
       token = Token(tokText, TokenType.STRING)  
+
+    elif self.currChar.isdigit():
+      startPos = self.currPos
+      while self.peek().isdigit():
+        self.nextChar()
+
+      if self.peek() == '.':
+        self.nextChar()
+        if not self.peek().isdigit():
+          self.abort("incorrect number format")
+        while self.peek().isdigit():
+          self.nextChar()
+      
+      tottext = self.source[startPos: self.currPos + 1]
+      token = Token(tottext, TokenType.NUMBER)
+        
     else:
       #unknown token ! aka not a single char operator
       self.abort("not recognized: " + self.currChar)
