@@ -30,7 +30,11 @@ class Lexer:
     
 
   def skipComment(self):
-    pass
+    if self.currChar == '#': # aka start of a comment
+      while self.currChar != '/n':
+        self.nextChar()
+      
+
 
   def skipWhitespace(self):
     if self.currChar == ' ' or self.currChar == '\t' or self.currChar == '\r':
@@ -41,6 +45,7 @@ class Lexer:
   def getToken(self):
     token = None
     self.skipWhitespace() #if the curr char is a white space, it immediately skips it
+    self.skipComment() #if there is a comment, its skipped immediately
     if self.currChar == '+':
       token = Token(self.currChar, TokenType.PLUS)
     elif self.currChar == '-':
