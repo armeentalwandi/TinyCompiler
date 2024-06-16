@@ -115,16 +115,16 @@ class Lexer:
       token = Token(tottext, TokenType.NUMBER)
         
     #handling keywords and identifiers 
-    elif self.curChar.isalpha():
+    elif self.currChar.isalpha():
             # leading character is a letter 
-            startPos = self.curPos
+            startPos = self.currPos
             while self.peek().isalnum():
                 self.nextChar()
 
             # Check if the token is in the list of keywords or an identifier
-            tokText = self.source[startPos : self.curPos + 1] # Get the substring.
+            tokText = self.source[startPos : self.currPos + 1] # Get the substring.
             keyword = Token.checkIfKeyword(tokText)
-            
+
             if keyword == None: # Identifier
                 token = Token(tokText, TokenType.IDENT)
             else:   # Keyword
