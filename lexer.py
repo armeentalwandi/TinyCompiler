@@ -44,7 +44,6 @@ class Lexer:
 # main function --> gets the next token
   def getToken(self):
     
-    
     self.skipWhitespace() #if the curr char is a white space, it immediately skips it
     self.skipComment() #if there is a comment, its skipped immediately
     token = None
