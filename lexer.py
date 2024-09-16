@@ -1,6 +1,7 @@
 # source code --> Lexer --> tokens --> Parser --> program tree -> Emitter --> compiled code
 
 # lexer = converts a string of teeny tiny code to tokens
+# a parser = parses the tokens to make sure the correct syntax is being followed
 from token1 import *
 import sys
 
