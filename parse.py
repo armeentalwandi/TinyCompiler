@@ -35,6 +35,39 @@ class Parse:
   # error message
   def abort(self, message):
     sys.exit("Error!: " + message)
+  
+  def nl(self):
+    print("NEWLINE")
+    self.match(TokenType.NEWLINE)
+    while self.checkToken(TokenType.NEWLINE):
+      self.nextToken()
+
+ # entry point into the program:= {statement}
+  def program(self):
+    print("PROGRAM")
+
+    while not self.checkToken(TokenType.EOF):
+      self.statement()
+  
+  def statement(self):
+    # there are multiple types of statements
+     # 1 . "PRINT" (expression | string)
+    if self.checkToken(TokenType.PRINT):
+      self.nextToken()
+
+      if self.checkToken(TokenType.STRING):
+        self.nextToken()
+      else:
+        self.expression()
+
+    self.nl()
+    
+    #2 
+
+        
+         
+         
+
 
 
 
