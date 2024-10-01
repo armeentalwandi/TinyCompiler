@@ -53,6 +53,7 @@ class Parse:
     # there are multiple types of statements
      # 1 . "PRINT" (expression | string)
     if self.checkToken(TokenType.PRINT):
+      print("STATEMENT-PRINT")
       self.nextToken()
 
       if self.checkToken(TokenType.STRING):
@@ -60,7 +61,54 @@ class Parse:
       else:
         self.expression()
 
+
+    # 2.  "IF" comparison "THEN" nl {statement} "ENDIF" nl
+    elif self.checkToken(TokenType.IF):
+      print("STATEMENT-IF")
+      self.nextToken()
+      self.comparison()
+      self.match(TokenType.THEN)
+      self.nl()
+      # 0 or more statements possible
+      while not self.checkToken(TokenType.ENDIF):
+        self.statement()
+      
+      self.match(TokenType.ENDIF)
+
+
+    # "WHILE" comparison "REPEAT" nl {statement nl} "ENDWHILE" nl
+    elif self.checkToken(TokenType.WHILE):
+      print("STATEMENT-WHILE")
+      self.nextToken()
+      self.comparison()
+      self.match(TokenType.REPEAT)
+      self.nl()
+
+      while not self.checkToken(TokenType.ENDWHILE):
+        self.statement()
+        self.nl()
+      
+      self.match(TokenType.ENDWHILE)
+    
+    #"LABEL" ident nl
+    elif self.checkToken(TokenType.LABEL):
+      print("STATEMENT-LABEL")
+      self.nextToken()
+      self.match(TokenType.IDENT)
+    
+    # "GOTO" ident nl
+    elif self.checkToken(TokenType.GOTO):
+      print("STATEMENT-GOTO")
+
+
+
+
+
+
+
+
     self.nl()
+
     
     #2 
 
