@@ -45,6 +45,8 @@ class Parse:
  # entry point into the program:= {statement}
   def program(self):
     print("PROGRAM")
+    while self.checkToken(TokenType.NEWLINE):
+      self.nextToken()
 
     while not self.checkToken(TokenType.EOF):
       self.statement()
@@ -61,7 +63,6 @@ class Parse:
       else:
         self.expression()
 
-
     # 2.  "IF" comparison "THEN" nl {statement} "ENDIF" nl
     elif self.checkToken(TokenType.IF):
       print("STATEMENT-IF")
@@ -71,10 +72,8 @@ class Parse:
       self.nl()
       # 0 or more statements possible
       while not self.checkToken(TokenType.ENDIF):
-        self.statement()
-      
+        self.statement() 
       self.match(TokenType.ENDIF)
-
 
     # "WHILE" comparison "REPEAT" nl {statement nl} "ENDWHILE" nl
     elif self.checkToken(TokenType.WHILE):
@@ -110,13 +109,22 @@ class Parse:
       self.match(TokenType.EQ)
       self.expression()
     
-    elif 
+     # | "INPUT" ident nl
+    elif self.checkToken(TokenType.INPUT):
+      print("STATEMENT-INPUT")
+      self.nextToken()
+      self.match(TokenType.IDENT)
+    
+    else:
+      self.abort("Not a valid statement: " + self.curToken.text + " - " + self.curToken.kind.name)
+
+
 
 
       
 
    
-   # | "INPUT" ident nl
+  
 
 
 
