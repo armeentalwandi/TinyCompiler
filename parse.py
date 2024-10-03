@@ -99,6 +99,24 @@ class Parse:
     # "GOTO" ident nl
     elif self.checkToken(TokenType.GOTO):
       print("STATEMENT-GOTO")
+      self.nextToken()
+      self.match(TokenType.IDENT)
+
+     #  "LET" ident "=" expression nl
+    elif self.checkToken(TokenType.LET):
+      print("STATEMENT-LET")
+      self.nextToken()
+      self.match(TokenType.IDENT)
+      self.match(TokenType.EQ)
+      self.expression()
+    
+    elif 
+
+
+      
+
+   
+   # | "INPUT" ident nl
 
 
 
