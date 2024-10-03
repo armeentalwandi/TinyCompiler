@@ -118,27 +118,48 @@ class Parse:
     else:
       self.abort("Not a valid statement: " + self.curToken.text + " - " + self.curToken.kind.name)
 
+    self.nl()
+
+ # comparison := expression (( == | != | > | < | >= | <= | ) expression)+  --> boolean expressions
+  def comparison(self):
+    print("COMPARISON")
+    self.expression()
+
+    # has to be atleast one comparison operator ANd another expression for it to be valid (the + indicates that)
+    if self.checkToken(TokenType.EQEQ) or self.checkToken(TokenType.NOTEQ) or self.checkToken(TokenType.GT) \
+      or self.checkToken(TokenType.LT) or self.checkToken(TokenType.GTEQ) or self.checkToken(TokenType.LTEQ):
+        self.nextToken()
+        self.expression()
+    else:
+      self.abort("Comparison operator error. Expected at " + self.curToken.text)
+    
+    # can have 0 or more MORE comparison operator and expressions after that
+    while self.checkToken(TokenType.EQEQ) or self.checkToken(TokenType.NOTEQ) or self.checkToken(TokenType.GT) \
+      or self.checkToken(TokenType.LT) or self.checkToken(TokenType.GTEQ) or self.checkToken(TokenType.LTEQ):
+      self.nextToken()
+      self.expression()
+  
+  # expression ::= term {( "-" | "+" ) term} --> {} means zero or more
+  def expression(self):
+    print("EXPRESSION")
+    self.term()
+
+    while self.checkToken(TokenType.MINUS) or self.checkToken(TokenType.PLUS):
+      self.nextToken()
+      self.term()
+    
+  def term(self):
+    pass
 
 
 
-      
 
-   
+
+
+
   
 
 
-
-
-
-
-
-
-    self.nl()
-
-    
-    #2 
-
-        
          
          
 
