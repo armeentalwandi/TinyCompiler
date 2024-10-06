@@ -147,9 +147,27 @@ class Parse:
     while self.checkToken(TokenType.MINUS) or self.checkToken(TokenType.PLUS):
       self.nextToken()
       self.term()
-    
+  
+  # term ::= unary {( "/" | "*" ) unary}
   def term(self):
-    pass
+    print("TERM")
+    self.unary()
+
+    while self.checkToken(TokenType.SLASH) or self.checkToken(TokenType.ASTERISK):
+      self.nextToken()
+      self.unary()
+  
+  # unary ::= ["+" | "-"] primary  --> [] is one or zero -- its optional
+  def unary(self):
+    print("UNARY")
+    if self.checkToken(TokenType.PLUS) or self.checkToken(TokenType.MINUS):
+      self.nextToken()
+    self.primary()
+  
+   # primary ::= number | ident
+  def primary(self):
+    print()
+    
 
 
 
