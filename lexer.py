@@ -38,7 +38,7 @@ class Lexer:
 
 
   def skipWhitespace(self):
-    if self.currChar == ' ' or self.currChar == '\t' or self.currChar == '\r':
+    while self.currChar == ' ' or self.currChar == '\t' or self.currChar == '\r':
       self.nextChar()
     
 

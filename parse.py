@@ -166,8 +166,14 @@ class Parse:
   
    # primary ::= number | ident
   def primary(self):
-    print()
-    
+    print("PRIMARY: " + self.curToken.text)
+    if self.checkToken(TokenType.NUMBER):
+      self.nextToken()
+    elif self.checkToken(TokenType.IDENT):
+      self.nextToken()
+    else:
+      self.abort("Unexpected token: " + self.curToken.text)
+  
 
 
 
