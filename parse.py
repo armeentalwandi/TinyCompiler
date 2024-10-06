@@ -9,6 +9,10 @@ class Parse:
     self.peekToken = None
     self.nextToken()
     self.nextToken() # initalizes peek and curr token properly!
+    
+    self.symbols = set()  # variables declared
+    self.labelsDeclared = set()  # labels declared
+    self.labelsGotoed = set() #labels go-toed
 
 
   # returns true if the current token matches the kind of the grammar
