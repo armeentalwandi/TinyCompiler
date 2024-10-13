@@ -54,6 +54,13 @@ class Parse:
 
     while not self.checkToken(TokenType.EOF):
       self.statement()
+    
+    # need to make sure after parsing that all of the go-to's were declared
+    #   as labels as well. go tos can be referenced before a label is declared
+    #   so we check at the end!
+    for label in self.labelsGotoed:
+      if label not in self.labelsDeclared:
+        self.abort("attempting to GOTO to undeclared var: " + label)
   
   def statement(self):
     # there are multiple types of statements
@@ -89,7 +96,6 @@ class Parse:
 
       while not self.checkToken(TokenType.ENDWHILE):
         self.statement()
-        self.nl()
       
       self.match(TokenType.ENDWHILE)
     
@@ -97,18 +103,30 @@ class Parse:
     elif self.checkToken(TokenType.LABEL):
       print("STATEMENT-LABEL")
       self.nextToken()
+
+      if self.curToken.text in self.labelsDeclared:
+        self.abort("label already exists: " + self.curToken.text)
+      self.labelsDeclared.add(self.curToken.text)
+
       self.match(TokenType.IDENT)
+
+
     
     # "GOTO" ident nl
     elif self.checkToken(TokenType.GOTO):
       print("STATEMENT-GOTO")
       self.nextToken()
+      self.labelsGotoed.add(self.curToken.text)
       self.match(TokenType.IDENT)
 
      #  "LET" ident "=" expression nl
     elif self.checkToken(TokenType.LET):
       print("STATEMENT-LET")
       self.nextToken()
+
+      if self.curToken.text not in self.symbols:
+        self.symbols.add(self.curToken.text)
+      
       self.match(TokenType.IDENT)
       self.match(TokenType.EQ)
       self.expression()
@@ -117,6 +135,8 @@ class Parse:
     elif self.checkToken(TokenType.INPUT):
       print("STATEMENT-INPUT")
       self.nextToken()
+      if self.curToken.text not in self.symbols:
+        self.symbols.add(self.curToken.text)
       self.match(TokenType.IDENT)
     
     else:
@@ -174,6 +194,8 @@ class Parse:
     if self.checkToken(TokenType.NUMBER):
       self.nextToken()
     elif self.checkToken(TokenType.IDENT):
+      if self.curToken.text not in self.symbols:
+        self.abort("Referencing variable before assignment: " + self.curToken.text)
       self.nextToken()
     else:
       self.abort("Unexpected token: " + self.curToken.text)
