@@ -84,57 +84,66 @@ class Parse:
 
     # 2.  "IF" comparison "THEN" nl {statement} "ENDIF" nl
     elif self.checkToken(TokenType.IF):
-      print("STATEMENT-IF")
       self.nextToken()
       self.emitter.emit("if(")
       self.comparison()
+
       self.match(TokenType.THEN)
       self.nl()
+      self.emitter.emitLine("){")
+
       # 0 or more statements possible
       while not self.checkToken(TokenType.ENDIF):
         self.statement() 
+
       self.match(TokenType.ENDIF)
+      self.emitter.emitLine("}")
 
     # "WHILE" comparison "REPEAT" nl {statement nl} "ENDWHILE" nl
     elif self.checkToken(TokenType.WHILE):
-      print("STATEMENT-WHILE")
       self.nextToken()
+      self.emitter.emit("while(")
       self.comparison()
+
       self.match(TokenType.REPEAT)
       self.nl()
+      self.emitter.emitLine("){")
 
       while not self.checkToken(TokenType.ENDWHILE):
         self.statement()
       
       self.match(TokenType.ENDWHILE)
+      self.emitter.emitLine("}")
     
     #"LABEL" ident nl
     elif self.checkToken(TokenType.LABEL):
-      print("STATEMENT-LABEL")
       self.nextToken()
 
       if self.curToken.text in self.labelsDeclared:
         self.abort("label already exists: " + self.curToken.text)
       self.labelsDeclared.add(self.curToken.text)
-
+      
+      self.emitter.emitLine(self.curToken.text + ":")
       self.match(TokenType.IDENT)
 
 
     
     # "GOTO" ident nl
     elif self.checkToken(TokenType.GOTO):
-      print("STATEMENT-GOTO")
       self.nextToken()
       self.labelsGotoed.add(self.curToken.text)
+
+      self.emitter.emitLine("goto " + self.curToken.text + ";")
       self.match(TokenType.IDENT)
 
      #  "LET" ident "=" expression nl
     elif self.checkToken(TokenType.LET):
-      print("STATEMENT-LET")
+
       self.nextToken()
 
       if self.curToken.text not in self.symbols:
         self.symbols.add(self.curToken.text)
+        self.emitter.headerLine("float " + self.curToken.text + ";")
       
       self.match(TokenType.IDENT)
       self.match(TokenType.EQ)
