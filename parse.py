@@ -138,16 +138,17 @@ class Parse:
 
      #  "LET" ident "=" expression nl
     elif self.checkToken(TokenType.LET):
-
       self.nextToken()
 
       if self.curToken.text not in self.symbols:
         self.symbols.add(self.curToken.text)
         self.emitter.headerLine("float " + self.curToken.text + ";")
       
+      self.emitter.emit(self.curToken.text + " = ")
       self.match(TokenType.IDENT)
       self.match(TokenType.EQ)
       self.expression()
+      self.emitter.emitLine(";")
     
      # | "INPUT" ident nl
     elif self.checkToken(TokenType.INPUT):
