@@ -42,7 +42,6 @@ class Parse:
     sys.exit("Error!: " + message)
   
   def nl(self):
-    print("NEWLINE")
     self.match(TokenType.NEWLINE)
     while self.checkToken(TokenType.NEWLINE):
       self.nextToken()
@@ -171,12 +170,12 @@ class Parse:
 
  # comparison := expression (( == | != | > | < | >= | <= | ) expression)+  --> boolean expressions
   def comparison(self):
-    print("COMPARISON")
     self.expression()
 
     # has to be atleast one comparison operator ANd another expression for it to be valid (the + indicates that)
     if self.checkToken(TokenType.EQEQ) or self.checkToken(TokenType.NOTEQ) or self.checkToken(TokenType.GT) \
       or self.checkToken(TokenType.LT) or self.checkToken(TokenType.GTEQ) or self.checkToken(TokenType.LTEQ):
+        self.emitter.emit(self.curToken.text)
         self.nextToken()
         self.expression()
     else:
@@ -185,43 +184,48 @@ class Parse:
     # can have 0 or more MORE comparison operator and expressions after that
     while self.checkToken(TokenType.EQEQ) or self.checkToken(TokenType.NOTEQ) or self.checkToken(TokenType.GT) \
       or self.checkToken(TokenType.LT) or self.checkToken(TokenType.GTEQ) or self.checkToken(TokenType.LTEQ):
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
       self.expression()
   
   # expression ::= term {( "-" | "+" ) term} --> {} means zero or more
   def expression(self):
-    print("EXPRESSION")
     self.term()
 
     while self.checkToken(TokenType.MINUS) or self.checkToken(TokenType.PLUS):
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
       self.term()
   
   # term ::= unary {( "/" | "*" ) unary}
   def term(self):
-    print("TERM")
     self.unary()
 
     while self.checkToken(TokenType.SLASH) or self.checkToken(TokenType.ASTERISK):
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
       self.unary()
   
   # unary ::= ["+" | "-"] primary  --> [] is one or zero -- its optional
   def unary(self):
-    print("UNARY")
     if self.checkToken(TokenType.PLUS) or self.checkToken(TokenType.MINUS):
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
     self.primary()
   
    # primary ::= number | ident
   def primary(self):
-    print("PRIMARY: " + self.curToken.text)
     if self.checkToken(TokenType.NUMBER):
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
+    
     elif self.checkToken(TokenType.IDENT):
       if self.curToken.text not in self.symbols:
         self.abort("Referencing variable before assignment: " + self.curToken.text)
+  
+      self.emitter.emit(self.curToken.text)
       self.nextToken()
+    
     else:
       self.abort("Unexpected token: " + self.curToken.text)
   

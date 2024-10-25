@@ -4,6 +4,7 @@ from emitter import *
 import sys
 
 def main():
+  print("My Tiny Compiler")
   if len(sys.argv) != 2:
     sys.exit("argument number is incorrect")
   
@@ -16,7 +17,7 @@ def main():
 
   parser.program()
   emitter.writeFile()
-  print("parsing complete")
+  print("Compiling complete")
 
   # token = lexer.getToken() # gets the token and moves position to the next one
   # while token.kind != TokenType.EOF:
