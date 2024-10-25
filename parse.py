@@ -3,8 +3,9 @@ from lexer import *
 
 # parse object is gonna keep track of current and previous tokens and make sure they match the grammar
 class Parse:
-  def __init__(self, lexer):
+  def __init__(self, lexer, emitter):
     self.lexer = lexer
+    self.emitter = emitter
     self.curToken = None
     self.peekToken = None
     self.nextToken()
@@ -48,12 +49,17 @@ class Parse:
 
  # entry point into the program:= {statement}
   def program(self):
-    print("PROGRAM")
+    self.emitter.headerLine('#include <stdio.h>"')
+    self.emitter.headerLine('int main(void){"')
+
     while self.checkToken(TokenType.NEWLINE):
       self.nextToken()
 
     while not self.checkToken(TokenType.EOF):
       self.statement()
+    
+    self.emitter.emitLine("return 0;")
+    self.emitter.emitLine("}")
     
     # need to make sure after parsing that all of the go-to's were declared
     #   as labels as well. go tos can be referenced before a label is declared
@@ -66,18 +72,21 @@ class Parse:
     # there are multiple types of statements
      # 1 . "PRINT" (expression | string)
     if self.checkToken(TokenType.PRINT):
-      print("STATEMENT-PRINT")
       self.nextToken()
 
       if self.checkToken(TokenType.STRING):
+        self.emitter.emitLine("printf(\"" + self.curToken.text + "\\n\");")
         self.nextToken()
       else:
+        self.emitter.emit("printf(\"%" + ".2f\\n\", (float)(")
         self.expression()
+        self.emitter.emitLine("));")
 
     # 2.  "IF" comparison "THEN" nl {statement} "ENDIF" nl
     elif self.checkToken(TokenType.IF):
       print("STATEMENT-IF")
       self.nextToken()
+      self.emitter.emit("if(")
       self.comparison()
       self.match(TokenType.THEN)
       self.nl()

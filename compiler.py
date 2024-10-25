@@ -1,5 +1,6 @@
 from lexer import *
 from parse import *
+from emitter import *
 import sys
 
 def main():
@@ -10,9 +11,11 @@ def main():
     source = source_file.read() #reads the entire file and stores in source
 
   lexer = Lexer(source)
-  parser = Parse(lexer)
+  emitter = Emitter("out.c")
+  parser = Parse(lexer, emitter)
 
   parser.program()
+  emitter.writeFile()
   print("parsing complete")
 
   # token = lexer.getToken() # gets the token and moves position to the next one
